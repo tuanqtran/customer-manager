@@ -4,7 +4,16 @@
 ?>
 <?php 
     // Create the select query.
-    $query = "SELECT * FROM customers
+    $query = "SELECT
+            customers.id,
+            customers.first_name,
+            customers.last_name,
+            customers.email,
+            customer_addresses.address,
+            customer_addresses.city,
+            customer_addresses.state,
+            customer_addresses.zipcode
+            FROM customers
             INNER JOIN customer_addresses
             ON customer_addresses.customer=customers.id
             ORDER BY join_date";
@@ -20,7 +29,7 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <title>CManage | Dashboard</title>
+        <title>Customer Manager | Dashboard</title>
         <link rel="stylesheet" type="text/css" href="<?php echo ROOT_PATH; ?>assets/css/bootstrap.min.css">
         <link rel="stylesheet" type="text/css" href="<?php echo ROOT_PATH; ?>assets/css/jumbotron-narrow.css">
         <link rel="stylesheet" type="text/css" href="<?php echo ROOT_PATH; ?>assets/css/style.css">
@@ -36,7 +45,7 @@
                         <li><a href="add_customer.php">Add Customer</a></li>
                     </ul>
                 </nav>
-                <h3 class="text-muted">Store CManager</h3>
+                <h3 class="text-muted">Store Customer Manager</h3>
             </div>
 
             <div class="row marketing">

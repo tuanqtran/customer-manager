@@ -4,9 +4,9 @@
 	$db_name = 'store';
 	$db_user = 'root';
 	$db_pass = '';
-	
+
 	// Create mysli Object
-	$mysqli = new mysqli($db_host, 	$db_user, $db_pass, $db_name);
+	$mysqli = new mysqli($db_host, $db_user, $db_pass, $db_name);
 
 	// Error Handler
 	if(mysqli_connect_errno()){

@@ -8,6 +8,75 @@
 	$id = $_GET['id'];
 
 	// Create customer select query
+	$query = "SELECT * FROM customers
+			INNER JOIN customer_addresses
+			ON customer_addresses.customer=customers.id
+			WHERE customers.id = $id";
+
+	// GET results
+	$result = $mysqli->query($query) or die($mysqli->error.__LINE__);
+
+	if ($result = $mysqli->query($query)){
+		// Fetch object array
+		while($row = $result->fetch_assoc()){
+			$first_name = $row['first_name'];
+			$last_name = $row['last_name'];
+			$email = $row['email'];
+			$address = $row['address'];
+			$address2 = $row['address2'];
+			$city = $row['city'];
+			$state = $row['state'];
+			$zipcode = $row['zipcode'];
+		}
+		// Free Result set
+		$result->close();
+	}
+?>
+
+<?php 
+	if($_POST){
+		$id = $_GET['id'];
+		// Get variables from post array.
+		$first_name = mysqli_real_escape_string($mysqli, $_POST['first_name']);
+		$last_name = mysqli_real_escape_string($mysqli, $_POST['last_name']);
+		$email = mysqli_real_escape_string($mysqli, $_POST['email']);
+		$password = mysqli_real_escape_string($mysqli, sha1($_POST['password']));
+		$address = mysqli_real_escape_string($mysqli, $_POST['address']);
+		$address2 = mysqli_real_escape_string($mysqli, $_POST['address2']);
+		$city = mysqli_real_escape_string($mysqli, $_POST['city']);
+		$state = mysqli_real_escape_string($mysqli, $_POST['state']);
+		$zipcode = mysqli_real_escape_string($mysqli, $_POST['zipcode']);
+
+
+		// Create customer update query
+		$query = "UPDATE customers
+				SET
+				first_name='$first_name',
+				last_name='$last_name',
+				email='$email',
+				password='$password'
+				WHERE id=$id";
+
+		// Run query
+		$mysqli->query($query) or die();
+
+		// Create address update query
+		$query = "UPDATE customer_addresses
+				SET
+				address='$address',
+				address2='$address2',
+				city='$city',
+				state='$state',
+				zipcode='$zipcode'
+				WHERE customer=$id";
+
+		// Run query
+		$mysqli->query($query) or die();
+
+		$msg = 'Customer Updated';
+		header('Location: index.php?msg='.urlencode($msg).'');
+		exit;
+	}
 ?>
 
 <!DOCTYPE html>
@@ -39,18 +108,18 @@
 			<div class="row marketing">
 				<div class="col-lg-12">
 					<h2>Add Customer</h2>
-					<form method="post" action="add_customer.php">
+					<form method="post" action="edit_customer.php?id=<?php echo $id; ?>">
 						<div class="form-group">
 							<label for="first_name">First Name</label>
-							<input name="first_name" type="text" class="form-control" id="first_name" placeholder="Enter First Name">
+							<input name="first_name" type="text" class="form-control" id="first_name" value="<?php echo $first_name; ?>" placeholder="Enter First Name">
 						</div>
 						<div class="form-group">
 							<label for="last_name">Last Name</label>
-							<input name="last_name" type="text" class="form-control" id="last_name" placeholder="Enter Last Name">
+							<input name="last_name" type="text" class="form-control" id="last_name" value="<?php echo $last_name; ?>" placeholder="Enter Last Name">
 						</div>
 						<div class="form-group">
 							<label for="email">Email address</label>
-							<input name="email" type="email" class="form-control" id="email" placeholder="Enter Email">
+							<input name="email" type="email" class="form-control" id="email" value="<?php echo $email; ?>" placeholder="Enter Email">
 						</div>
 						<div class="form-group">
 							<label for="password">Password</label>
@@ -58,25 +127,25 @@
 						</div>
 						<div class="form-group">
 							<label for="address">Address</label>
-							<input name="address" type="text" class="form-control" id="address" placeholder="Enter Address">
+							<input name="address" type="text" class="form-control" id="address" value="<?php echo $address; ?>" placeholder="Enter Address">
 						</div>
 						<div class="form-group">
 							<label for="address2">Address 2</label>
-							<input name="address2" type="text" class="form-control" id="address2" placeholder="Enter Address 2">
+							<input name="address2" type="text" class="form-control" id="address2" value="<?php echo $address2; ?>" placeholder="Enter Address 2">
 						</div>
 						<div class="form-group">
 							<label for="city">City</label>
-							<input name="city" type="text" class="form-control" id="city" placeholder="Enter City">
+							<input name="city" type="text" class="form-control" id="city" value="<?php echo $city; ?>" placeholder="Enter City">
 						</div>
 						<div class="form-group">
 							<label for="state">State</label>
-							<input name="state" type="text" class="form-control" id="state" placeholder="Enter State">
+							<input name="state" type="text" class="form-control" id="state" value="<?php echo $state; ?>" placeholder="Enter State">
 						</div>
 						<div class="form-group">
 							<label for="zipcode">Zipcode</label>
-							<input name="zipcode" type="text" class="form-control" id="zipcode" placeholder="Enter Zipcode">
+							<input name="zipcode" type="text" class="form-control" id="zipcode" value="<?php echo $zipcode; ?>" placeholder="Enter Zipcode">
 						</div>
-						<input type="submit" class="btn btn-default" value="Add Customer" />
+						<input type="submit" class="btn btn-default" value="Update Customer" />
 					</form>
 				</div>
 			</div>
